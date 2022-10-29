@@ -4,9 +4,9 @@
     <id>ArduinoUploader</id>
     <version>$version$</version>
     <title>ArduinoUploader</title>
-    <authors>Christophe Diericx</authors>
-    <owners>Christophe Diericx</owners>
-    <projectUrl>https://github.com/christophediericx/ArduinoSketchUploader</projectUrl>
+    <authors>Anders Dyhrberg</authors>
+    <owners>Anders Dyhrberg</owners>
+    <projectUrl>https://github.com/dyhrberg/ArduinoSketchUploader</projectUrl>
     <iconUrl>https://avatars3.githubusercontent.com/u/19640854?s=140</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A library to upload an Intel HEX file (e.g. compiled sketches) directly to an Arduino over a (USB) serial port without having to use the Arduino IDE (or avrdude).</description>
@@ -19,6 +19,6 @@
     </dependencies>  
   </metadata>
   <files>
-	<file src="bin\$configuration$\ArduinoUploader.dll" target="lib\net40\" />
+	<file src="bin\$configuration$\ArduinoUploader.dll" target="lib\net6.0\" />
   </files>
 </package>

@@ -8,9 +8,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ArduinoUploader")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Christophe Diericx")]
+//[assembly: AssemblyCompany("Christophe Diericx")]
+[assembly: AssemblyCompany("Anders Dyhrberg")]
 [assembly: AssemblyProduct("ArduinoUploader")]
-[assembly: AssemblyCopyright("Copyright © Christophe Diericx 2016 - 2018")]
+//[assembly: AssemblyCopyright("Copyright © Christophe Diericx 2016 - 2018")]
+[assembly: AssemblyCopyright("Copyright © Anders Dyhrberg 2022 - ")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,7 +34,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.2.0.0")]
-[assembly: AssemblyFileVersion("3.2.0.0")]
+[assembly: AssemblyVersion("3.3.0.0")]
+[assembly: AssemblyFileVersion("3.3.0.0")]
 
 [assembly: InternalsVisibleTo("ArduinoSketchUploader")]
