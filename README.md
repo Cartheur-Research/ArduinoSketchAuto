@@ -1,4 +1,7 @@
-# ArduinoSketchUploader
+# ArduinoUploader.NET
+
+This repository is a .NET6.0 upgraded version of the original work done by Christophe Diericx
+At this point there are no functional changes.
 
 This repository contains a .NET library and a corresponding Windows command line utility that can be used to upload a compiled sketch (.HEX) directly to an Arduino board over USB. It talks to the boards bootloader over the serial (USB) connection, much like *avrdude* does (when invoked from the Arduino IDE, or from the command line).
 
@@ -24,13 +27,13 @@ The library has been tested with the following configurations:
 
 ## How to use the command line application ##
 
-[Download the latest Windows binaries here (.zip file, version 3.2.0).](https://github.com/christophediericx/ArduinoSketchUploader/releases/download/v3.2.0/ArduinoSketchUploader-3.2.0.zip)
+[Download the latest Windows binaries here (.zip file, version 6.0.0).](https://github.com/christophediericx/ArduinoSketchUploader/releases/download/v3.2.0/ArduinoSketchUploader-3.2.0.zip)
 
 When running *ArduinoSketchUploader.exe* without arguments, the application will document its usage:
 
 ```
-ArduinoSketchUploader 3.2.0.0
-Copyright c Christophe Diericx 2016 - 2018
+ArduinoSketchUploader 6.0.0.0
+Copyright c Anders Dyhrberg 2022 - 
 
 ERROR(S):
   -f/--file required option is missing.
@@ -64,9 +67,9 @@ ArduinoSketchUploader.exe --file=C:\MyHexFiles\myHexFile.hex --model=UnoR3
 
 ## How to use the .NET library ##
 
-[![NuGet version](https://badge.fury.io/nu/ArduinoUploader.svg)](https://badge.fury.io/nu/ArduinoUploader)
+[![NuGet version](https://badge.fury.io/nu/ArduinoUploader.NET.svg)](https://badge.fury.io/nu/ArduinoUploader.NET)
 
-Link the following nuget package in your project in order to use the ArduinoUploader: https://www.nuget.org/packages/ArduinoUploader/
+Link the following nuget package in your project in order to use the ArduinoUploader: https://www.nuget.org/packages/ArduinoUploader.NET/
 
 Alternatively, install the package using the nuget package manager console:
 

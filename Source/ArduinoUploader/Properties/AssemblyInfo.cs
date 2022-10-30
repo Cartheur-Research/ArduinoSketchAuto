@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ArduinoUploader")]
+[assembly: AssemblyTitle("ArduinoUploader.NET")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 //[assembly: AssemblyCompany("Christophe Diericx")]
 [assembly: AssemblyCompany("Anders Dyhrberg")]
-[assembly: AssemblyProduct("ArduinoUploader")]
+[assembly: AssemblyProduct("ArduinoUploader.NET")]
 //[assembly: AssemblyCopyright("Copyright © Christophe Diericx 2016 - 2018")]
 [assembly: AssemblyCopyright("Copyright © Anders Dyhrberg 2022 - ")]
 [assembly: AssemblyTrademark("")]
@@ -34,7 +34,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.3.0.0")]
-[assembly: AssemblyFileVersion("3.3.0.0")]
+[assembly: AssemblyVersion("6.0.0.0")]
+[assembly: AssemblyFileVersion("6.0.0.0")]
 
 [assembly: InternalsVisibleTo("ArduinoSketchUploader")]

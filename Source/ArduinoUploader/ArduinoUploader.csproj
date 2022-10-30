@@ -3,6 +3,18 @@
     <TargetFramework>net6.0</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Description>A library to upload an Intel HEX file (e.g. compiled sketches) directly to an Arduino over a (USB) serial port without having to use the Arduino IDE (or avrdude). This project is forked from ArduinoUploader by Christophe Diericx. This is updated to support .NET6.0</Description>
+    <Copyright>MIT</Copyright>
+    <PackageProjectUrl>https://github.com/dyhrberg/ArduinoSketchUploader</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dyhrberg/ArduinoSketchUploader</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>arduino;upload;serial;avr;flash;hex;.NET;core;dotnet</PackageTags>
+    <PackageReleaseNotes>Upgraded to support .NET6.0</PackageReleaseNotes>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+    <FileVersion>6.0.0.0</FileVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>6.0.0</Version>
+    <PackageId>$(AssemblyName).NET</PackageId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <LangVersion>6</LangVersion>
@@ -11,6 +23,12 @@
     <EmbeddedResource Include="ArduinoUploader.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Update="ArduinoUploader.nuspec">
