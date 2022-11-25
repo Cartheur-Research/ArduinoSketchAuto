@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 using ArduinoUploader.BootloaderProgrammers.Protocols;
 using ArduinoUploader.Hardware;
 using RJCP.IO.Ports;
@@ -22,7 +23,7 @@ namespace ArduinoUploader.BootloaderProgrammers
         {
             var portName = SerialPortConfig.PortName;
             var baudRate = SerialPortConfig.BaudRate;
-            Logger?.Info($"Opening serial port {portName} - baudrate {baudRate}");
+            Logger?.LogInformation($"Opening serial port {portName} - baudrate {baudRate}");
 
             SerialPort = new SerialPortStream(portName, baudRate)
             {
@@ -33,7 +34,7 @@ namespace ArduinoUploader.BootloaderProgrammers
             var preOpen = SerialPortConfig.PreOpenResetBehavior;
             if (preOpen != null)
             {
-                Logger?.Info($"Executing Post Open behavior ({preOpen})...");
+                Logger?.LogInformation($"Executing Post Open behavior ({preOpen})...");
                 SerialPort = preOpen.Reset(SerialPort, SerialPortConfig);
             }
 
@@ -51,19 +52,19 @@ namespace ArduinoUploader.BootloaderProgrammers
                 throw new ArduinoUploaderException(
                     $"Unable to open serial port {portName} - {ex.Message}.");
             }
-            Logger?.Trace($"Opened serial port {portName} with baud rate {baudRate}!");
+            Logger?.LogTrace($"Opened serial port {portName} with baud rate {baudRate}!");
 
             var postOpen = SerialPortConfig.PostOpenResetBehavior;
             if (postOpen != null)
             {
-                Logger?.Info($"Executing Post Open behavior ({postOpen})...");
+                Logger?.LogInformation($"Executing Post Open behavior ({postOpen})...");
                 SerialPort = postOpen.Reset(SerialPort, SerialPortConfig);
             }
 
             var sleepAfterOpen = SerialPortConfig.SleepAfterOpen;
             if (SerialPortConfig.SleepAfterOpen <= 0) return;
 
-            Logger?.Trace($"Sleeping for {sleepAfterOpen} ms after open...");
+            Logger?.LogTrace($"Sleeping for {sleepAfterOpen} ms after open...");
             Thread.Sleep(sleepAfterOpen);
         }
 
@@ -77,11 +78,11 @@ namespace ArduinoUploader.BootloaderProgrammers
             var preClose = SerialPortConfig.CloseResetAction;
             if (preClose != null)
             {
-                Logger?.Info("Resetting...");
+                Logger?.LogInformation("Resetting...");
                 SerialPort = preClose.Reset(SerialPort, SerialPortConfig);
             }
 
-            Logger?.Info("Closing serial port...");
+            Logger?.LogInformation("Closing serial port...");
             SerialPort.DtrEnable = false;
             SerialPort.RtsEnable = false;
             try
@@ -98,7 +99,7 @@ namespace ArduinoUploader.BootloaderProgrammers
         {
             var bytes = request.Bytes;
             var length = bytes.Length;
-            Logger?.Trace($"Sending {length} bytes: {Environment.NewLine}"
+            Logger?.LogTrace($"Sending {length} bytes: {Environment.NewLine}"
                 + $"{BitConverter.ToString(bytes)}");
             SerialPort.Write(bytes, 0, length);
         }
@@ -117,7 +118,7 @@ namespace ArduinoUploader.BootloaderProgrammers
             try
             {
                 SerialPort.Read(bytes, 0, 1);
-                Logger?.Trace($"Receiving byte: {BitConverter.ToString(bytes)}");
+                Logger?.LogTrace($"Receiving byte: {BitConverter.ToString(bytes)}");
                 return bytes[0];
             }
             catch (TimeoutException)
@@ -135,7 +136,7 @@ namespace ArduinoUploader.BootloaderProgrammers
                 while (retrieved < length)
                     retrieved += SerialPort.Read(bytes, retrieved, length - retrieved);
 
-                Logger?.Trace($"Receiving bytes: {BitConverter.ToString(bytes)}");
+                Logger?.LogTrace($"Receiving bytes: {BitConverter.ToString(bytes)}");
                 return bytes;
             }
             catch (TimeoutException)

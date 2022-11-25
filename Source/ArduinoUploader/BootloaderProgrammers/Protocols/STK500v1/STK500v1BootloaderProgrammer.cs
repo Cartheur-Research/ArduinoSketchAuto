@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 using ArduinoUploader.BootloaderProgrammers.Protocols.STK500v1.Messages;
 using ArduinoUploader.Hardware;
 using ArduinoUploader.Hardware.Memory;
@@ -61,7 +62,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v1
 
         public override void CheckDeviceSignature()
         {
-            Logger?.Debug($"Expecting to find '{Mcu.DeviceSignature}'...");
+            Logger?.LogDebug($"Expecting to find '{Mcu.DeviceSignature}'...");
             SendWithSyncRetry(new ReadSignatureRequest());
             var response = Receive<ReadSignatureResponse>(4);
             if (response == null || !response.IsCorrectResponse)
@@ -77,9 +78,9 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v1
         {
             var majorVersion = GetParameterValue(Constants.ParmStkSwMajor);
             var minorVersion = GetParameterValue(Constants.ParmStkSwMinor);
-            Logger?.Info($"Retrieved software version: {majorVersion}.{minorVersion}.");
+            Logger?.LogInformation($"Retrieved software version: {majorVersion}.{minorVersion}.");
 
-            Logger?.Info("Setting device programming parameters...");
+            Logger?.LogInformation("Setting device programming parameters...");
             SendWithSyncRetry(new SetDeviceProgrammingParametersRequest((Mcu) Mcu));
             var nextByte = ReceiveNext();
 
@@ -107,7 +108,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v1
 
         private uint GetParameterValue(byte param)
         {
-            Logger?.Trace($"Retrieving parameter '{param}'...");
+            Logger?.LogTrace($"Retrieving parameter '{param}'...");
             SendWithSyncRetry(new GetParameterRequest(param));
             var nextByte = ReceiveNext();
             var paramValue = (uint) nextByte;
@@ -146,7 +147,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v1
 
         public override void LoadAddress(IMemory memory, int addr)
         {
-            Logger?.Trace($"Sending load address request: {addr}.");
+            Logger?.LogTrace($"Sending load address request: {addr}.");
             addr = addr >> 1;
             SendWithSyncRetry(new LoadAddressRequest(addr));
             var result = ReceiveNext();

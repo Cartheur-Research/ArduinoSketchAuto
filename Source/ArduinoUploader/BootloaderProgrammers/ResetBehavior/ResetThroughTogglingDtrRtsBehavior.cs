@@ -1,11 +1,12 @@
 ﻿using System.Threading;
+using Microsoft.Extensions.Logging;
 using RJCP.IO.Ports;
 
 namespace ArduinoUploader.BootloaderProgrammers.ResetBehavior
 {
     internal class ResetThroughTogglingDtrRtsBehavior : IResetBehavior
     {
-        private static IArduinoUploaderLogger Logger => ArduinoSketchUploader.Logger;
+        private static ILogger Logger => ArduinoSketchUploader.Logger;
 
         private int Wait1 { get; }
         private int Wait2 { get; }
@@ -20,7 +21,7 @@ namespace ArduinoUploader.BootloaderProgrammers.ResetBehavior
 
         public SerialPortStream Reset(SerialPortStream serialPort, SerialPortConfig config)
         {
-            Logger?.Trace("Toggling DTR/RTS...");
+            Logger?.LogTrace("Toggling DTR/RTS...");
 
             serialPort.DtrEnable = Invert;
             serialPort.RtsEnable = Invert;

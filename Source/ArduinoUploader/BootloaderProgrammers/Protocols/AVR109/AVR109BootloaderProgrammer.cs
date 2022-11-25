@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using ArduinoUploader.BootloaderProgrammers.Protocols.AVR109.Messages;
 using ArduinoUploader.Hardware;
 using ArduinoUploader.Hardware.Memory;
@@ -21,9 +22,9 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.AVR109
             try
             {
                 var currentPort = SerialPort.PortName;
-                Logger?.Info($"Closing {currentPort}...");
+                Logger?.LogInformation($"Closing {currentPort}...");
                 SerialPort.Close();
-                Logger?.Info($"Waiting for virtual port {currentPort} to disappear...");
+                Logger?.LogInformation($"Waiting for virtual port {currentPort} to disappear...");
 
                 const int timeoutVirtualPointDisappearance = 10000;
                 const int virtualPortDisappearanceInterval = 100;
@@ -35,7 +36,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.AVR109
                             : $"T+{i * interval} - Port disappeared: {item}!");
 
                 if (result == null)
-                    Logger?.Warn(
+                    Logger?.LogWarning(
                         $"Virtual COM port {currentPort} was still present "
                         + "after {timeoutVirtualPointDisappearance} ms!");
             }
@@ -48,7 +49,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.AVR109
 
         public override void CheckDeviceSignature()
         {
-            Logger?.Debug($"Expecting to find '{Mcu.DeviceSignature}'...");
+            Logger?.LogDebug($"Expecting to find '{Mcu.DeviceSignature}'...");
             Send(new ReadSignatureBytesRequest());
             var response = Receive<ReadSignatureBytesResponse>(3);
             if (response == null)
@@ -70,7 +71,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.AVR109
                 throw new ArduinoUploaderException(
                     "Unable to retrieve software identifier!");
 
-            Logger?.Info("Software identifier: "
+            Logger?.LogInformation("Software identifier: "
                 + $"'{Encoding.ASCII.GetString(softIdResponse.Bytes)}'");
 
             Send(new ReturnSoftwareVersionRequest());
@@ -79,7 +80,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.AVR109
                 throw new ArduinoUploaderException(
                     "Unable to retrieve software version!");
 
-            Logger?.Info("Software Version: "
+            Logger?.LogInformation("Software Version: "
                 + $"{softVersionResponse.MajorVersion}.{softVersionResponse.MinorVersion}");
 
             Send(new ReturnProgrammerTypeRequest());
@@ -88,7 +89,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.AVR109
                 throw new ArduinoUploaderException(
                     "Unable to retrieve programmer type!");
 
-            Logger?.Info($"Programmer type: {progTypeResponse.ProgrammerType}.");
+            Logger?.LogInformation($"Programmer type: {progTypeResponse.ProgrammerType}.");
 
             Send(new CheckBlockSupportRequest());
             var checkBlockResponse = Receive<CheckBlockSupportResponse>(3);
@@ -97,7 +98,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.AVR109
             if (!checkBlockResponse.HasBlockSupport)
                 throw new ArduinoUploaderException("Block support is not supported!");
 
-            Logger?.Info($"Block support - buffer size {checkBlockResponse.BufferSize} bytes.");
+            Logger?.LogInformation($"Block support - buffer size {checkBlockResponse.BufferSize} bytes.");
 
             Send(new ReturnSupportedDeviceCodesRequest());
             var devices = new List<byte>();
@@ -109,14 +110,14 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.AVR109
             } while (true);
 
             var supportedDevices = string.Join("-", devices);
-            Logger?.Info($"Supported devices: {supportedDevices}.");
+            Logger?.LogInformation($"Supported devices: {supportedDevices}.");
 
             var devCode = Mcu.DeviceCode;
             if (!devices.Contains(devCode))
                 throw new ArduinoUploaderException(
                     $"Device {devCode} not in supported list of devices: {supportedDevices}!");
 
-            Logger?.Info($"Selecting device type '{devCode}'...");
+            Logger?.LogInformation($"Selecting device type '{devCode}'...");
             Send(new SelectDeviceTypeRequest(devCode));
             var response = ReceiveNext();
             if (response != Constants.CarriageReturn)
@@ -133,7 +134,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.AVR109
 
         public override void LoadAddress(IMemory memory, int offset)
         {
-            Logger?.Trace($"Sending load address request: {offset}.");
+            Logger?.LogTrace($"Sending load address request: {offset}.");
             Send(new SetAddressRequest(offset / 2));
             var response = ReceiveNext();
             if (response != Constants.CarriageReturn)

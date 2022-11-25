@@ -15,21 +15,23 @@ using ArduinoUploader.Hardware;
 using IntelHexFormatReader;
 using IntelHexFormatReader.Model;
 using RJCP.IO.Ports;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace ArduinoUploader
 {
     public class ArduinoSketchUploader
     {
-        internal static IArduinoUploaderLogger Logger { get; set; }
+        //internal static IArduinoUploaderLogger Logger { get; set; }
+        public static ILogger Logger;
 
         private readonly ArduinoSketchUploaderOptions _options;
         private readonly IProgress<double> _progress;
 
-        public ArduinoSketchUploader(ArduinoSketchUploaderOptions options, 
-            IArduinoUploaderLogger logger = null, IProgress<double> progress = null)
+        public ArduinoSketchUploader(ArduinoSketchUploaderOptions options, ILoggerFactory loggerFactory = null, IProgress<double> progress = null)
         {
-            Logger = logger;
-            Logger?.Info("Starting ArduinoSketchUploader...");
+            Logger = loggerFactory?.CreateLogger(nameof(ArduinoSketchUploader)); ;
+            Logger?.LogInformation("Starting ArduinoSketchUploader...");
             _options = options;
             _progress = progress;
         }
@@ -38,16 +40,31 @@ namespace ArduinoUploader
         {
             var hexFileName = _options.FileName;
             string[] hexFileContents;
-            Logger?.Info($"Starting upload process for file '{hexFileName}'.");
+            Logger?.LogInformation($"Starting upload process for file '{hexFileName}'.");
             try
             {
-                hexFileContents = File.ReadAllLines(hexFileName);
+                if(_options.LoadFromEmbeddedResource)
+                {
+                    //Consider encoding?
+                    var sr = new StreamReader(Assembly.GetCallingAssembly().GetManifestResourceStream("ArduinoUploadTester.Firmware." + hexFileName));
+
+                    String line;
+                    List<String> lines = new List<String>();
+
+                        while ((line = sr.ReadLine()) != null)
+                            lines.Add(line);
+
+                    hexFileContents = lines.ToArray();
+                }
+                else    
+                    hexFileContents = File.ReadAllLines(hexFileName);
             }
             catch (Exception ex)
             {
-                Logger?.Error(ex.Message, ex);
+                Logger?.LogError(ex.Message, ex);
                 throw;
             }
+
             UploadSketch(hexFileContents);
         }
 
@@ -62,7 +79,7 @@ namespace ArduinoUploader
                 // If we don't specify a COM port, automagically select one if there is only a single match.
                 if (string.IsNullOrWhiteSpace(serialPortName) && distinctPorts.SingleOrDefault() != null)
                 {
-                    Logger?.Info($"Port autoselected: {serialPortName}.");
+                    Logger?.LogInformation($"Port autoselected: {serialPortName}.");
                     serialPortName = distinctPorts.Single();
                 }
                 // Or else, check that we have an unambiguous match. Throw an exception otherwise.
@@ -73,7 +90,7 @@ namespace ArduinoUploader
                         $"Specified COM port name '{serialPortName}' is not valid.");
                 }
 
-                Logger?.Trace($"Creating serial port '{serialPortName}'...");
+                Logger?.LogTrace($"Creating serial port '{serialPortName}'...");
                 ArduinoBootloaderProgrammer programmer;
                 IMcu mcu;
 
@@ -117,48 +134,48 @@ namespace ArduinoUploader
 
                 try
                 {
-                    Logger?.Info("Establishing memory block contents...");
+                    Logger?.LogInformation("Establishing memory block contents...");
                     var memoryBlockContents = ReadHexFile(hexFileContents, mcu.Flash.Size);
 
                     programmer.Open();
 
-                    Logger?.Info("Establishing sync...");
+                    Logger?.LogInformation("Establishing sync...");
                     programmer.EstablishSync();
-                    Logger?.Info("Sync established.");
+                    Logger?.LogInformation("Sync established.");
 
-                    Logger?.Info("Checking device signature...");
+                    Logger?.LogInformation("Checking device signature...");
                     programmer.CheckDeviceSignature();
-                    Logger?.Info("Device signature checked.");
+                    Logger?.LogInformation("Device signature checked.");
 
-                    Logger?.Info("Initializing device...");
+                    Logger?.LogInformation("Initializing device...");
                     programmer.InitializeDevice();
-                    Logger?.Info("Device initialized.");
+                    Logger?.LogInformation("Device initialized.");
 
-                    Logger?.Info("Enabling programming mode on the device...");
+                    Logger?.LogInformation("Enabling programming mode on the device...");
                     programmer.EnableProgrammingMode();
-                    Logger?.Info("Programming mode enabled.");
+                    Logger?.LogInformation("Programming mode enabled.");
 
-                    Logger?.Info("Programming device...");
+                    Logger?.LogInformation("Programming device...");
                     programmer.ProgramDevice(memoryBlockContents, _progress);
-                    Logger?.Info("Device programmed.");
+                    Logger?.LogInformation("Device programmed.");
 
-                    Logger?.Info("Verifying program...");
+                    Logger?.LogInformation("Verifying program...");
                     programmer.VerifyProgram(memoryBlockContents, _progress);
-                    Logger?.Info("Verified program!");
+                    Logger?.LogInformation("Verified program!");
 
-                    Logger?.Info("Leaving programming mode...");
+                    Logger?.LogInformation("Leaving programming mode...");
                     programmer.LeaveProgrammingMode();
-                    Logger?.Info("Left programming mode!");
+                    Logger?.LogInformation("Left programming mode!");
                 }
                 finally
                 {
                     programmer.Close();
                 }
-                Logger?.Info("All done, shutting down!");
+                Logger?.LogInformation("All done, shutting down!");
             }
             catch (Exception ex)
             {
-                Logger?.Error(ex.Message, ex);
+                Logger?.LogError(ex.Message, ex);
                 throw;
             }
         }
@@ -174,7 +191,7 @@ namespace ArduinoUploader
             }
             catch (Exception ex)
             {
-                Logger?.Error(ex.Message, ex);
+                Logger?.LogError(ex.Message, ex);
                 throw;
             }
         }

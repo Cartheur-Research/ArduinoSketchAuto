@@ -3,12 +3,13 @@ using System.Linq;
 using ArduinoUploader.Hardware;
 using ArduinoUploader.Hardware.Memory;
 using IntelHexFormatReader.Model;
+using Microsoft.Extensions.Logging;
 
 namespace ArduinoUploader.BootloaderProgrammers
 {
     internal abstract class BootloaderProgrammer : IBootloaderProgrammer
     {
-        protected IArduinoUploaderLogger Logger => ArduinoSketchUploader.Logger;
+        protected ILogger Logger => ArduinoSketchUploader.Logger;
 
         protected IMcu Mcu { get; }
 
@@ -33,8 +34,8 @@ namespace ArduinoUploader.BootloaderProgrammers
             var sizeToWrite = memoryBlock.HighestModifiedOffset + 1;
             var flashMem = Mcu.Flash;
             var pageSize = flashMem.PageSize;
-            Logger?.Info($"Preparing to write {sizeToWrite} bytes...");
-            Logger?.Info($"Flash page size: {pageSize}.");
+            Logger?.LogInformation($"Preparing to write {sizeToWrite} bytes...");
+            Logger?.LogInformation($"Flash page size: {pageSize}.");
 
             int offset;
             for (offset = 0; offset < sizeToWrite; offset += pageSize)
@@ -51,16 +52,16 @@ namespace ArduinoUploader.BootloaderProgrammers
                 if (needsWrite)
                 {
                     var bytesToCopy = memoryBlock.Cells.Skip(offset).Take(pageSize).Select(x => x.Value).ToArray();
-                    Logger?.Trace($"Writing page at offset {offset}.");
+                    Logger?.LogTrace($"Writing page at offset {offset}.");
                     LoadAddress(flashMem, offset);
                     ExecuteWritePage(flashMem, offset, bytesToCopy);
                 }
                 else
                 {
-                    Logger?.Trace("Skip writing page...");
+                    Logger?.LogTrace("Skip writing page...");
                 }
             }
-            Logger?.Info($"{sizeToWrite} bytes written to flash memory!");
+            Logger?.LogInformation($"{sizeToWrite} bytes written to flash memory!");
         }
 
         public virtual void VerifyProgram(MemoryBlock memoryBlock, IProgress<double> progress = null)
@@ -68,26 +69,26 @@ namespace ArduinoUploader.BootloaderProgrammers
             var sizeToVerify = memoryBlock.HighestModifiedOffset + 1;
             var flashMem = Mcu.Flash;
             var pageSize = flashMem.PageSize;
-            Logger?.Info($"Preparing to verify {sizeToVerify} bytes...");
-            Logger?.Info($"Flash page size: {pageSize}.");
+            Logger?.LogInformation($"Preparing to verify {sizeToVerify} bytes...");
+            Logger?.LogInformation($"Flash page size: {pageSize}.");
 
             int offset;
             for (offset = 0; offset < sizeToVerify; offset += pageSize)
             {
                 progress?.Report((double) (sizeToVerify + offset) / (sizeToVerify * 2));
-                Logger?.Debug($"Executing verification of bytes @ address {offset} (page size {pageSize})...");
+                Logger?.LogDebug($"Executing verification of bytes @ address {offset} (page size {pageSize})...");
                 var bytesToVerify = memoryBlock.Cells.Skip(offset).Take(pageSize).Select(x => x.Value).ToArray();
                 LoadAddress(flashMem, offset);
                 var bytesPresent = ExecuteReadPage(flashMem);
                 var succeeded = bytesToVerify.SequenceEqual(bytesPresent);
                 if (succeeded) continue;
 
-                Logger?.Info(
+                Logger?.LogInformation(
                     $"Expected: {BitConverter.ToString(bytesToVerify)}."
                     + $"{Environment.NewLine}Read after write: {BitConverter.ToString(bytesPresent)}");
                 throw new ArduinoUploaderException("Difference encountered during verification!");
             }
-            Logger?.Info($"{sizeToVerify} bytes verified!");
+            Logger?.LogInformation($"{sizeToVerify} bytes verified!");
         }
     }
 }

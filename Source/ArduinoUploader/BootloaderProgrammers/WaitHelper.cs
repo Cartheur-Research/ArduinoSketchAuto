@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,7 +7,7 @@ namespace ArduinoUploader.BootloaderProgrammers
 {
     internal static class WaitHelper
     {
-        private static IArduinoUploaderLogger Logger => ArduinoSketchUploader.Logger;
+        private static ILogger Logger => ArduinoSketchUploader.Logger;
 
         internal static T WaitFor<T>(int timeout, int interval, Func<T> toConsider, Func<int, T, int, string> format)
             where T : class
@@ -19,7 +20,7 @@ namespace ArduinoUploader.BootloaderProgrammers
                 while (!token.IsCancellationRequested)
                 {
                     var item = toConsider();
-                    Logger?.Info(format(i, item, interval));
+                    Logger?.LogInformation(format(i, item, interval));
                     if (item != null) return item;
                     i++;
                     Thread.Sleep(interval);

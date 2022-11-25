@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2.Messages;
 using ArduinoUploader.Hardware;
 using ArduinoUploader.Hardware.Memory;
@@ -75,7 +76,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
             }
             if (retryCounter == maxRetries)
             {
-                Logger?.Trace($"No MESSAGE_START found after {maxRetries} bytes!");
+                Logger?.LogTrace($"No MESSAGE_START found after {maxRetries} bytes!");
                 return null;
             }
 
@@ -84,7 +85,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
             var seqNumber = ReceiveNext();
             if (seqNumber != LastCommandSequenceNumber)
             {
-                Logger?.Warn(CorruptWrapper($"Wrong sequence number: {seqNumber} - expected {LastCommandSequenceNumber}!"));
+                Logger?.LogWarning(CorruptWrapper($"Wrong sequence number: {seqNumber} - expected {LastCommandSequenceNumber}!"));
                 return null;
             }
             wrappedResponseBytes[1] = _sequenceNumber;
@@ -92,7 +93,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
             var messageSizeHighByte = ReceiveNext();
             if (messageSizeHighByte == -1)
             {
-                Logger?.Warn(CorruptWrapper("Timeout ocurred!"));
+                Logger?.LogWarning(CorruptWrapper("Timeout ocurred!"));
                 return null;
             }
             wrappedResponseBytes[2] = (byte) messageSizeHighByte;
@@ -100,7 +101,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
             var messageSizeLowByte = ReceiveNext();
             if (messageSizeLowByte == -1)
             {
-                Logger?.Warn(CorruptWrapper("Timeout ocurred!"));
+                Logger?.LogWarning(CorruptWrapper("Timeout ocurred!"));
                 return null;
             }
             wrappedResponseBytes[3] = (byte) messageSizeLowByte;
@@ -110,7 +111,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
             var token = ReceiveNext();
             if (token != Constants.Token)
             {
-                Logger?.Warn(CorruptWrapper("Token not received!"));
+                Logger?.LogWarning(CorruptWrapper("Token not received!"));
                 return null;
             }
             wrappedResponseBytes[4] = (byte) token;
@@ -118,7 +119,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
             var payload = ReceiveNext(messageSize);
             if (payload == null)
             {
-                Logger?.Warn(CorruptWrapper("Inner message not received!"));
+                Logger?.LogWarning(CorruptWrapper("Inner message not received!"));
                 return null;
             }
 
@@ -127,7 +128,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
             var responseCheckSum = ReceiveNext();
             if (responseCheckSum == -1)
             {
-                Logger?.Warn(CorruptWrapper("Checksum not received!"));
+                Logger?.LogWarning(CorruptWrapper("Checksum not received!"));
                 return null;
             }
             wrappedResponseBytes[5 + messageSize] = (byte) responseCheckSum;
@@ -137,7 +138,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
 
             if (responseCheckSum != checksum)
             {
-                Logger?.Warn(CorruptWrapper("Checksum incorrect!"));
+                Logger?.LogWarning(CorruptWrapper("Checksum incorrect!"));
                 return null;
             }
 
@@ -159,7 +160,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
 
         public override void CheckDeviceSignature()
         {
-            Logger?.Debug($"Expecting to find '{Mcu.DeviceSignature}'...");
+            Logger?.LogDebug($"Expecting to find '{Mcu.DeviceSignature}'...");
             if (!_deviceSignature.Equals(Mcu.DeviceSignature))
                 throw new ArduinoUploaderException(
                     $"Unexpected device signature - found '{_deviceSignature}'"
@@ -172,10 +173,10 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
             var softwareMajor = GetParameterValue(Constants.ParamSwMajor);
             var softwareMinor = GetParameterValue(Constants.ParamSwMinor);
             var vTarget = GetParameterValue(Constants.ParamVTarget);
-            Logger?.Info(
+            Logger?.LogInformation(
                 $"Retrieved software version: {hardwareVersion} (hardware) "
                 + $"- {softwareMajor}.{softwareMinor} (software).");
-            Logger?.Info($"Parameter VTarget: {vTarget}.");
+            Logger?.LogInformation($"Parameter VTarget: {vTarget}.");
         }
 
         public override void EnableProgrammingMode()
@@ -264,7 +265,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
 
         public override void ExecuteWritePage(IMemory memory, int offset, byte[] bytes)
         {
-            Logger?.Trace("Sending execute write page request for offset "
+            Logger?.LogTrace("Sending execute write page request for offset "
                 + $"{offset} ({bytes.Length} bytes)...");
 
             var writeCmd = _writeCommands[memory.Type];
@@ -293,7 +294,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
 
         public override void LoadAddress(IMemory memory, int offset)
         {
-            Logger?.Trace($"Sending load address request: {offset:X2}.");
+            Logger?.LogTrace($"Sending load address request: {offset:X2}.");
             offset = offset >> 1;
             Send(new LoadAddressRequest(memory, offset));
             var response = Receive<LoadAddressResponse>();
@@ -303,7 +304,7 @@ namespace ArduinoUploader.BootloaderProgrammers.Protocols.STK500v2
 
         private uint GetParameterValue(byte param)
         {
-            Logger?.Trace($"Retrieving parameter '{param:X2}'...");
+            Logger?.LogTrace($"Retrieving parameter '{param:X2}'...");
             Send(new GetParameterRequest(param));
             var response = Receive<GetParameterResponse>();
             if (response == null || !response.IsSuccess)

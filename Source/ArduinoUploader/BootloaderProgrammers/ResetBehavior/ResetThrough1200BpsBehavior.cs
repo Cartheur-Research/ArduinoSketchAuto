@@ -1,17 +1,19 @@
 ﻿using System.Linq;
+using Microsoft.Extensions.Logging;
 using RJCP.IO.Ports;
+
 
 namespace ArduinoUploader.BootloaderProgrammers.ResetBehavior
 {
     internal class ResetThrough1200BpsBehavior : IResetBehavior
     {
-        private static IArduinoUploaderLogger Logger => ArduinoSketchUploader.Logger;
+        private static ILogger Logger => ArduinoSketchUploader.Logger;
 
         public SerialPortStream Reset(SerialPortStream serialPort, SerialPortConfig config)
         {
             const int timeoutVirtualPortDiscovery = 10000;
             const int virtualPortDiscoveryInterval = 100;
-            Logger?.Info("Issuing forced 1200bps reset...");
+            Logger?.LogInformation("Issuing forced 1200bps reset...");
             var currentPortName = serialPort.PortName;
             var originalPorts = SerialPortStream.GetPortNames();
 
