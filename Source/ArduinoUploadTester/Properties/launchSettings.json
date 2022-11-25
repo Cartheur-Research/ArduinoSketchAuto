@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ArduinoUploadTester": {
+      "commandName": "Project",
+      "commandLineArgs": "-m Micro -p COM22"
+    }
+  }
+}

@@ -4,7 +4,7 @@ namespace ArduinoUploader
 {
     public class ArduinoSketchUploaderOptions
     {
-        public bool LoadFromEmbeddedResource { get; set; } = true;  
+        public bool LoadFromEmbeddedResource { get; set; } = false;  
 
         public string FileName { get; set; }
 
