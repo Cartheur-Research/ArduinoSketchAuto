@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArduinoUploader", "ArduinoUploader\ArduinoUploader.csproj", "{76B83943-5E26-4A25-A2BC-074C13744150}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArduinoUploadTester", "ArduinoUploadTester\ArduinoUploadTester.csproj", "{55E82E6A-0CBF-4F5D-B39E-30A31733EBE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArduinoUploadTool", "ArduinoUploadTester\ArduinoUploadTool.csproj", "{55E82E6A-0CBF-4F5D-B39E-30A31733EBE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

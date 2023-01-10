@@ -36,28 +36,16 @@ namespace ArduinoUploader
             _progress = progress;
         }
 
-        public void UploadSketch()
+        /// <summary>
+        /// Uploades file from filepath and name c:/myfile.hex
+        /// </summary>
+        public void UploadFile(string fileName)
         {
-            var hexFileName = _options.FileName;
             string[] hexFileContents;
-            Logger?.LogInformation($"Starting upload process for file '{hexFileName}'.");
+            Logger?.LogInformation($"Starting upload process for file '{fileName}'.", fileName);
             try
             {
-                if(_options.LoadFromEmbeddedResource)
-                {
-                    //Consider encoding?
-                    var sr = new StreamReader(Assembly.GetCallingAssembly().GetManifestResourceStream("ArduinoUploadTester.Firmware." + hexFileName));
-
-                    String line;
-                    List<String> lines = new List<String>();
-
-                        while ((line = sr.ReadLine()) != null)
-                            lines.Add(line);
-
-                    hexFileContents = lines.ToArray();
-                }
-                else    
-                    hexFileContents = File.ReadAllLines(hexFileName);
+               hexFileContents = File.ReadAllLines(fileName);
             }
             catch (Exception ex)
             {
@@ -65,10 +53,13 @@ namespace ArduinoUploader
                 throw;
             }
 
-            UploadSketch(hexFileContents);
+            UploadFile(hexFileContents);
         }
 
-        public void UploadSketch(IEnumerable<string> hexFileContents)
+        /// <summary>
+        /// Uploads file from file content, read into an IEnumerable<string>
+        /// </summary>
+        public void UploadFile(IEnumerable<string> hexFileContents)
         {
             try
             {

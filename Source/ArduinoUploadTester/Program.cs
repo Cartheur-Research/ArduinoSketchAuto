@@ -3,6 +3,7 @@ using ArduinoUploader;
 using ArduinoUploader.Hardware;
 using Fclp;
 using Serilog;
+using System;
 
 namespace ArduinoUploadTester
 {
@@ -53,15 +54,15 @@ namespace ArduinoUploadTester
 
                 Log.Information("Uploading file {file} to Arduino {model} using {port}", appArgs.FileName, appArgs.ArduinoModel, appArgs.PortName);
 
-                var progress = new Progress<double>(
-                   p => 
-                   {
-                       Log.Information("Upload progress: {progress:P}%", p);
-                       Console.CursorTop--;
-                   });
-
-                var uploader = new ArduinoSketchUploader(uploaderOptions, null, progress);
-                uploader.UploadSketch();
+                Progress<double> progress = new Progress<double>(
+                    p =>
+                    {
+                        Log.Information("Upload progress: {progress:P}%", p);
+                        Console.CursorTop--;
+                    });
+                
+                var uploader = new ArduinoSketchUploader(uploaderOptions, null, appArgs.Silent ? null : progress);
+                uploader.UploadFile(uploaderOptions.FileName);
 
                 Log.Information("Upload complete");
             }
@@ -75,8 +76,8 @@ namespace ArduinoUploadTester
     public class ApplicationArguments
     {
         public bool Silent { get; set; }
-        public string PortName { get; set; }
-        public string FileName { get; set; }
+        public string PortName { get; set; } = "";
+        public string FileName { get; set; } = "";
         public ArduinoModel ArduinoModel { get; set; }
     }
 }

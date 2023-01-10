@@ -88,6 +88,8 @@ namespace ArduinoUploader.BootloaderProgrammers
                     + $"{Environment.NewLine}Read after write: {BitConverter.ToString(bytesPresent)}");
                 throw new ArduinoUploaderException("Difference encountered during verification!");
             }
+            
+            progress?.Report(1); //Really should  fix the math to it reports 100%
             Logger?.LogInformation($"{sizeToVerify} bytes verified!");
         }
     }

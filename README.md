@@ -1,7 +1,7 @@
 # ArduinoUploader.NET
 
-This repository is a .NET6.0 upgraded version of the original work done by Christophe Diericx
-At this point there are no functional changes.
+This repository is a .NET7.0 upgraded version of the original work done by Christophe Diericx
+Added support for upload with both filePath and fileContent.
 
 This repository contains a .NET library and a corresponding Windows command line utility that can be used to upload a compiled sketch (.HEX) directly to an Arduino board over USB. It talks to the boards bootloader over the serial (USB) connection, much like *avrdude* does (when invoked from the Arduino IDE, or from the command line).
 
@@ -17,8 +17,9 @@ The library has been tested with the following configurations:
 | Mega 1284     | ATMega1284    | [STK500v1](/Documentation/STK500v1.pdf)            |
 | Mega 2560     | ATMega2560    | [STK500v2](/Documentation/STK500v2.pdf)            |
 | Micro         | ATMega32U4    | [AVR109](/Documentation/AVR109.pdf)                |
-| Nano (R2)     | ATMega168     |  [STK500v1](/Documentation/STK500v1.pdf)           |
+| Nano (R2)     | ATMega168     | [STK500v1](/Documentation/STK500v1.pdf)            |
 | Nano (R3)     | ATMega328P    | [STK500v1](/Documentation/STK500v1.pdf)            |
+| Pro Micro     | ATMega32U4    | [AVR109](/Documentation/AVR109.pdf)                |
 | Uno (R3)      | ATMega328P    | [STK500v1](/Documentation/STK500v1.pdf)            |
 
 > *If you have a need for this library to run on another Arduino model, feel free to open an issue on GitHub, it should be relatively straightforward to add support (for most).*
@@ -27,12 +28,13 @@ The library has been tested with the following configurations:
 
 ## How to use the command line application ##
 
-[Download the latest Windows binaries here (.zip file, version 6.0.0).](https://github.com/christophediericx/ArduinoSketchUploader/releases/download/v3.2.0/ArduinoSketchUploader-3.2.0.zip)
+!! LINK NOT UPDATED -  Will be fixed !!
+[Download the latest Windows binaries here (.zip file, version 7.0.0).](https://github.com/christophediericx/ArduinoSketchUploader/releases/download/v3.2.0/ArduinoSketchUploader-3.2.0.zip)
 
-When running *ArduinoSketchUploader.exe* without arguments, the application will document its usage:
+When running *ArduinoUploaderTool.exe* without arguments, the application will document its usage:
 
 ```
-ArduinoSketchUploader 6.0.0.0
+ArduinoSketchUploader 7.0.0.0
 Copyright c Anders Dyhrberg 2022 - 
 
 ERROR(S):
@@ -48,9 +50,13 @@ ERROR(S):
 
   -m, --model    Required. Arduino model. Valid parameters are any of the
                  following: [Leonardo, Mega1284, Mega2560, Micro, NanoR2,
+                 NanoR3, ProMicro, UnoR3].
+
+  -s, --silent   Required. Arduino model. Valid parameters are any of the
+                 following: [Leonardo, Mega1284, Mega2560, Micro, NanoR2,
                  NanoR3, UnoR3].
 
-  --help         Display this help screen.
+  -?, --help     Display this help screen.
 ```
   
 A sample command line invocation (for a Mega2560 type Arduino attached to COM4):
