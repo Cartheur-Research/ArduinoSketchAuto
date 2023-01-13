@@ -59,6 +59,24 @@
       <WriteTimeout>1000</WriteTimeout>
       <Protocol>Stk500v1</Protocol>
     </Arduino>
+	  <Arduino model="ProMicro8">
+		  <Mcu>AtMega32U4</Mcu>
+		  <BaudRate>57600</BaudRate>
+		  <PreOpenResetBehavior>1200bps</PreOpenResetBehavior>
+		  <SleepAfterOpen>0</SleepAfterOpen>
+		  <ReadTimeout>1000</ReadTimeout>
+		  <WriteTimeout>1000</WriteTimeout>
+		  <Protocol>Avr109</Protocol>
+	  </Arduino>
+	  <Arduino model="ProMicro16">
+		  <Mcu>AtMega32U4</Mcu>
+		  <BaudRate>57600</BaudRate>
+		  <PreOpenResetBehavior>1200bps</PreOpenResetBehavior>
+		  <SleepAfterOpen>0</SleepAfterOpen>
+		  <ReadTimeout>1000</ReadTimeout>
+		  <WriteTimeout>1000</WriteTimeout>
+		  <Protocol>Avr109</Protocol>
+	  </Arduino>
     <Arduino model="UnoR3">
       <Mcu>AtMega328P</Mcu>
       <BaudRate>115200</BaudRate>

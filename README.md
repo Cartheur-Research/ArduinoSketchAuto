@@ -19,7 +19,8 @@ The library has been tested with the following configurations:
 | Micro         | ATMega32U4    | [AVR109](/Documentation/AVR109.pdf)                |
 | Nano (R2)     | ATMega168     | [STK500v1](/Documentation/STK500v1.pdf)            |
 | Nano (R3)     | ATMega328P    | [STK500v1](/Documentation/STK500v1.pdf)            |
-| Pro Micro     | ATMega32U4    | [AVR109](/Documentation/AVR109.pdf)                |
+| Pro Micro 8   | ATMega32U4    | [AVR109](/Documentation/AVR109.pdf)                |
+| Pro Micro 16  | ATMega32U4    | [AVR109](/Documentation/AVR109.pdf)                |
 | Uno (R3)      | ATMega328P    | [STK500v1](/Documentation/STK500v1.pdf)            |
 
 > *If you have a need for this library to run on another Arduino model, feel free to open an issue on GitHub, it should be relatively straightforward to add support (for most).*
@@ -34,7 +35,7 @@ The library has been tested with the following configurations:
 When running *ArduinoUploaderTool.exe* without arguments, the application will document its usage:
 
 ```
-ArduinoSketchUploader 7.0.0.0
+ArduinoSketchUploader 7.1.0.0
 Copyright c Anders Dyhrberg 2022 - 
 
 ERROR(S):
