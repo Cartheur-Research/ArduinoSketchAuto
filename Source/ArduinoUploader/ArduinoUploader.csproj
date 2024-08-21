@@ -1,21 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Description>A library to upload an Intel HEX file (e.g. compiled sketches) directly to an Arduino over a (USB) serial port without having to use the Arduino IDE (or avrdude). This project is forked by Anders Dyhrberg from ArduinoUploader by Christophe Diericx. This is updated to support .NET7.0</Description>
+    <Description>A library to upload an Intel HEX file (e.g. compiled sketches) directly to an Arduino over a (USB) serial port without having to use the Arduino IDE (or avrdude). This project is forked by Anders Dyhrberg from ArduinoUploader by Christophe Diericx. This is updated to support .NET8.0</Description>
     <Copyright>MIT</Copyright>
     <PackageProjectUrl>https://github.com/dyhrberg/ArduinoSketchUploader</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dyhrberg/ArduinoSketchUploader</RepositoryUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>arduino;upload;serial;avr;flash;hex;.NET;core;dotnet</PackageTags>
-    <PackageReleaseNotes>Upgraded to support .NET7.0
+    <PackageReleaseNotes>Upgraded to support .NET8.0
 Breaking change: UploadSketch renamed to UploadFile
 Added support for upload by filePath and fileContent</PackageReleaseNotes>
-    <AssemblyVersion>7.0.0.0</AssemblyVersion>
-    <FileVersion>7.0.0.0</FileVersion>
+    <AssemblyVersion>8.0.0.0</AssemblyVersion>
+    <FileVersion>8.0.0.0</FileVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>7.0.0</Version>
+    <Version>8.0.0</Version>
     <PackageId>$(AssemblyName).NET</PackageId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -27,18 +26,7 @@ Added support for upload by filePath and fileContent</PackageReleaseNotes>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="ArduinoUploader.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="IntelHexFormatReader" Version="2.2.3" />
-    <PackageReference Include="SerialPortStream" Version="2.4.1" />
+    <PackageReference Include="SerialPortStream" Version="2.4.2" />
   </ItemGroup>
 </Project>

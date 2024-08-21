@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Xml.Serialization;
 using ArduinoUploader.BootloaderProgrammers;
 using ArduinoUploader.BootloaderProgrammers.Protocols.AVR109;
@@ -15,7 +14,6 @@ using ArduinoUploader.Hardware;
 using IntelHexFormatReader;
 using IntelHexFormatReader.Model;
 using RJCP.IO.Ports;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace ArduinoUploader
